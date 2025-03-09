@@ -45,8 +45,8 @@ class RegistrationCameraState extends State<RegistrationCamera> {
         Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Image taken: ${widget.clicksCount}/10"),
-            IconButton(onPressed: widget.flipCamera, icon: Icon(Icons.flip_camera_ios_rounded))
+            Padding(padding: const EdgeInsets.only(bottom: 5, top: 5), child: Text("Image taken: ${widget.clicksCount}/10"),),
+            // IconButton(onPressed: widget.flipCamera, icon: Icon(Icons.flip_camera_ios_rounded))
           ],
         ),),
         SizedBox(

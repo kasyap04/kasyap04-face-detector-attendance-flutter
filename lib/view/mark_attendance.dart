@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:face_attendence/components/attendance/camera_preview.dart';
+import 'package:face_attendence/components/attendance/present_preview.dart';
 import 'package:face_attendence/utils/attendence.dart';
 import 'package:flutter/material.dart';
 import 'package:face_attendence/components/appBar.dart';
@@ -19,7 +20,10 @@ class MarkAttendanceState extends State<MarkAttendance> {
   final AttendenceUtils utils = AttendenceUtils() ;
   late CameraController controller;
   int openCameraIndex = -1 ;
-  int attant_tries = 0 ;
+  int attantTries = 0 ;
+  late File studentImage ;
+  Map<dynamic, dynamic> studentDetails = {} ;
+
 
   void turnCameraOn() async {
     List<CameraDescription> cameras = await availableCameras();
@@ -46,17 +50,75 @@ class MarkAttendanceState extends State<MarkAttendance> {
 
 
   Future<void> startCaptureImages() async {
-    print('working----------------------') ;
-    if([0, 1].contains(openCameraIndex) && attant_tries <= 10){
+    if([0, 1].contains(openCameraIndex) && attantTries <= 10){
       XFile taken = await controller.takePicture() ;
       File image = File(taken.path) ;
-      attant_tries ++ ;
-      print("TAKEN $image") ;
+      attantTries ++ ;
       Map result = await utils.makeAttendance(image) ;
-      if(!result['status']){
+      if(result['status']){
+        setState(() {
+          studentDetails = result ;
+          studentImage = image ;
+        });
+      } else {
         await startCaptureImages() ;
       }
     }
+
+    if(attantTries >= 10){
+      setState(() {});
+    }
+  }
+
+
+  void resetCamera() {
+    setState(() {
+        studentDetails = {} ;
+        attantTries = 0 ;
+        openCameraIndex = -1 ;
+      });
+  }
+
+  List<Widget> getDisplayWidget(Size size){
+    if(attantTries >= 10){
+      return [DummyCamera(
+        size: size, 
+        displayText: "Click to open camera",
+        onPresses: resetCamera) ] ;
+    }
+
+    if(studentDetails.isNotEmpty){
+      return [
+        Image.file(studentImage, height: 300,),
+        const Padding(padding: EdgeInsets.only(bottom: 50)),
+        StudentPresentPreview(),
+        const Padding(padding: EdgeInsets.only(bottom: 50)),
+        Container(
+          height: 100,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(10)
+          ),
+          child: Center(child: Text('Present', style: TextStyle(fontSize: 40, color: Colors.green))),
+        ),
+        const Padding(padding: EdgeInsets.only(bottom: 10)),
+        OutlinedButton(onPressed: resetCamera, child: Text("Next"))
+      ] ;
+    }
+
+    if([0, 1].contains(openCameraIndex)){
+      return [SizedBox(
+            height: size.width,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: CameraPreview(controller),
+            ),
+          )] ;
+    }
+
+
+    return [DummyCamera(size: size, displayText: "Opening camera..",)] ;
+
   }
   
   @override
@@ -84,17 +146,7 @@ class MarkAttendanceState extends State<MarkAttendance> {
       appBar: AppBarWidget(back: true, title: 'Take attendence', currentContext: context),
       body: ListView(
         padding: const EdgeInsets.all(10),
-        children: [
-          [0, 1].contains(openCameraIndex) ?
-          SizedBox(
-            height: size.width,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CameraPreview(controller),
-            ),
-          )
-          : DummyCamera(size: size)
-        ],
+        children: getDisplayWidget(size),
       ),
     ) ;
   }

@@ -6,26 +6,33 @@ import 'package:face_attendence/view/mark_attendance.dart';
 import 'package:face_attendence/components/appBar.dart';
 
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
+  @override
+  State<Dashboard> createState() => DashboardState();
+}
+
+class DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
 
-    void navigateRegisterStudent() {
-      Navigator.push(
+    void navigateRegisterStudent() async {
+      await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const Register()),
       );
+      setState(() {});
     }
 
-    void navigateTakeAttendance() {
-      Navigator.push(
+    void navigateTakeAttendance() async {
+      await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MarkAttendance()),
       );
+      setState(() {});
     }
 
     return Scaffold(

@@ -24,11 +24,13 @@ class AttendenceUtils{
   
     List students = result['data']['students'] ;
     List attend = result['data']['attendence'] ;
+
     
     for(Map<String, dynamic> stu in students){
       if(attend.contains(stu['id'])){
         attendence.add({
           'name': stu['name'],
+          'roll_no': stu['roll_no'].toString(),
           'attendence': 'Present'
         }) ;
       } else {

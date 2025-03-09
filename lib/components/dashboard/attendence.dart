@@ -54,6 +54,7 @@ class AttendenceState extends State<Attendence> {
           TextButton(onPressed: onDatePressed, child: Row(
             children: [
               Text(todayDate),
+              const Padding(padding: EdgeInsets.only(left: 5)),
               Icon(Icons.calendar_month)
             ])
           ),
@@ -73,12 +74,20 @@ class AttendenceState extends State<Attendence> {
                   return Center(child: Text("No attendence for $todayDate", style: TextStyle(color: Colors.grey))) ;
                 }
 
-                List<TableRow> tableRows = [] ;
+                List<TableRow> tableRows = [TableRow(
+                    children: [
+                      Text("S.no", style: TextStyle(color: Colors.grey)),
+                      Text("Name", style: TextStyle(color: Colors.grey)),
+                      Text("Roll no", style: TextStyle(color: Colors.grey)),
+                      Text("attendence", style: TextStyle(color: Colors.grey))
+                    ]
+                  )] ;
                 for(int i = 0; i < result.length; i++){
                   tableRows.add(TableRow(
                     children: [
                       Text((i + 1).toString()),
                       Text(result[i]['name']),
+                      Text(result[i]['roll_no']),
                       Text(result[i]['attendence'])
                     ]
                   )) ;
@@ -89,7 +98,8 @@ class AttendenceState extends State<Attendence> {
                   children: [Table(
                     columnWidths: {
                       0: FractionColumnWidth(0.2),
-                      1: FractionColumnWidth(0.5)
+                      1: FractionColumnWidth(0.2),
+                      2: FractionColumnWidth(0.3)
                     },
                   children: tableRows,
                 ) ],

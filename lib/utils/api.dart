@@ -76,8 +76,6 @@ class ApiService{
       final res = await response.stream.bytesToString() ;
       Map resData = jsonDecode(res) as Map ; 
 
-      print(resData) ;
-
       return resData ;
     }catch(e){
       return {'status': false, 'msg': e.toString()} ;  
