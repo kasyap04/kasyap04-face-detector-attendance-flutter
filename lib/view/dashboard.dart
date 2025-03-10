@@ -42,7 +42,7 @@ class DashboardState extends State<Dashboard> {
       children: [
         SizedBox(
           width: size.width,
-          height: size.height - 160,
+          height: size.height - 180,
           child: Attendence(size: size),
         ),
         Divider(),

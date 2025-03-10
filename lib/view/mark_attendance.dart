@@ -91,7 +91,7 @@ class MarkAttendanceState extends State<MarkAttendance> {
       return [
         Image.file(studentImage, height: 300,),
         const Padding(padding: EdgeInsets.only(bottom: 50)),
-        StudentPresentPreview(),
+        StudentPresentPreview(name: studentDetails['name'], rollNo: studentDetails['roll_no'],),
         const Padding(padding: EdgeInsets.only(bottom: 50)),
         Container(
           height: 100,

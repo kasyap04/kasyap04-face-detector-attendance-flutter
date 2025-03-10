@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 
 class StudentPresentPreview extends StatelessWidget{
-  const StudentPresentPreview({super.key});
+  const StudentPresentPreview({super.key, required this.name, required this.rollNo});
+  final String name ;
+  final String rollNo ;
 
 
   Widget bigText(String text){
@@ -21,13 +23,13 @@ class StudentPresentPreview extends StatelessWidget{
       children: [
         Column(
           children: [
-            bigText("Vishnu"),
+            bigText(name),
             smallText("Name")
           ],
         ),
         Column(
           children: [
-            bigText("21"),
+            bigText(rollNo),
             smallText("Roll no")
           ],
         )

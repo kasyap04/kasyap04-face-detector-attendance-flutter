@@ -47,70 +47,66 @@ class AttendenceState extends State<Attendence> {
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(
-      width: widget.size.width,
-      child: Column(
-        children: [
-          TextButton(onPressed: onDatePressed, child: Row(
-            children: [
-              Text(todayDate),
-              const Padding(padding: EdgeInsets.only(left: 5)),
-              Icon(Icons.calendar_month)
-            ])
-          ),
-
-          SizedBox(
-            height: widget.size.height - 210,
-            width: widget.size.width - 20,
-            child: FutureBuilder(
-              future: attendenceUtils.getAttendence(actualDate), 
-              builder: (context, snapshot) {
-                if(!snapshot.hasData){
-                  return Center(child: Text("Loading attendence...", style: TextStyle(color: Colors.grey))) ;
-                }
-
-                dynamic result = snapshot.data ;
-                if(result.isEmpty){
-                  return Center(child: Text("No attendence for $todayDate", style: TextStyle(color: Colors.grey))) ;
-                }
-
-                List<TableRow> tableRows = [TableRow(
-                    children: [
-                      Text("S.no", style: TextStyle(color: Colors.grey)),
-                      Text("Name", style: TextStyle(color: Colors.grey)),
-                      Text("Roll no", style: TextStyle(color: Colors.grey)),
-                      Text("attendence", style: TextStyle(color: Colors.grey))
-                    ]
-                  )] ;
-                for(int i = 0; i < result.length; i++){
-                  tableRows.add(TableRow(
-                    children: [
-                      Text((i + 1).toString()),
-                      Text(result[i]['name']),
-                      Text(result[i]['roll_no']),
-                      Text(result[i]['attendence'])
-                    ]
-                  )) ;
-                  
-                }
-
-                return ListView(
-                  children: [Table(
-                    columnWidths: {
-                      0: FractionColumnWidth(0.2),
-                      1: FractionColumnWidth(0.2),
-                      2: FractionColumnWidth(0.3)
-                    },
-                  children: tableRows,
-                ) ],
-                );
-                
+    return Column(
+      children: [
+        TextButton(onPressed: onDatePressed, child: Row(
+          children: [
+            Text(todayDate),
+            const Padding(padding: EdgeInsets.only(left: 5)),
+            Icon(Icons.calendar_month)
+          ])
+        ),
+    
+        SizedBox(
+          height: widget.size.height - 250,
+          width: widget.size.width - 20,
+          child: FutureBuilder(
+            future: attendenceUtils.getAttendence(actualDate), 
+            builder: (context, snapshot) {
+              if(!snapshot.hasData){
+                return Center(child: Text("Loading attendence...", style: TextStyle(color: Colors.grey))) ;
               }
-          )
-          )
+    
+              dynamic result = snapshot.data ;
+              if(result.isEmpty){
+                return Center(child: Text("No attendence for $todayDate", style: TextStyle(color: Colors.grey))) ;
+              }
+    
+              List<TableRow> tableRows = [TableRow(
+                  children: [
+                    Text("S.no", style: TextStyle(color: Colors.grey)),
+                    Text("Name", style: TextStyle(color: Colors.grey)),
+                    Text("Roll no", style: TextStyle(color: Colors.grey)),
+                    Text("attendence", style: TextStyle(color: Colors.grey))
+                  ]
+                )] ;
+              for(int i = 0; i < result.length; i++){
+                tableRows.add(TableRow(
+                  children: [
+                    Padding(padding: const EdgeInsets.only(bottom: 10), child: Text((i + 1).toString())),
+                    Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(result[i]['name'], style: TextStyle(fontSize: 20))),
+                    Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(result[i]['roll_no'], style: TextStyle(fontSize: 20))),
+                    Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(result[i]['attendence'], style: TextStyle(fontSize: 20))),
+                  ]
+                )) ;
+              }
+    
+              return ListView(
+                children: [Table(
+                  columnWidths: {
+                    0: FractionColumnWidth(0.2),
+                    1: FractionColumnWidth(0.2),
+                    2: FractionColumnWidth(0.3)
+                  },
+                children: tableRows,
+                                ) ],
+              );
               
-        ],
-      ),
+            }
+        )
+        )
+            
+      ],
     );
   }
 }
